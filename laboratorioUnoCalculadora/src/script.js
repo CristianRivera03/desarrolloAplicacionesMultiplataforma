@@ -38,9 +38,16 @@ class Calculadora {
      */
     agregarNumero(numero) {
         // Evita agregar múltiples puntos decimales
+        if(this.valorActual.length >= 16){
+            alert("Valores Excedidos")
+            calculator.borrarTodo()
+        }
+
+
         if (numero === '.' && this.valorActual.includes('.')) return
         // Concatena el nuevo número al valor actual
         this.valorActual = this.valorActual.toString() + numero.toString()
+        console.log(this.valorActual.length)
     }
 
     /**
@@ -66,7 +73,6 @@ class Calculadora {
         // let resultado = 111111
         const valor_1 = parseFloat(this.valorPrevio)
         const valor_2 = parseFloat(this.valorActual)
-
         let promedio = (valor_1 * valor_2)/100
         console.log(` ${valor_1} y ${valor_2} ${promedio}`)
         this.valorActual = promedio
@@ -160,17 +166,6 @@ class Calculadora {
 
         }
     }
-
-    operacionPrevia(){
-
-        let valueOne = this.obtenerNumero(this.valorPrevio)
-        let valueTwo = this.obtenerNumero(this.valorActual)
-
-            console.log (`${valueOne} ${this.operacion} ${valueTwo}`)
-            this.valorPrevioTextElement.innerText = (`${valueOne} ${this.operacion} ${valueTwo}`)
-
-
-    }
 }
 
 /*
@@ -203,6 +198,7 @@ const calculator = new Calculadora(valorPrevioTextElement, valorActualTextElemen
  * Esta sección asigna eventos de click a cada tipo de botón
  */
 
+//Funciu
 porcentajeButton.addEventListener('click', _button => {
     calculator.calcularPromedio()
     calculator.actualizarPantalla()
@@ -211,6 +207,7 @@ porcentajeButton.addEventListener('click', _button => {
 // Cuando se presiona un botón numérico, agrega ese número al valor actual y actualiza la pantalla
 
 let operacionShow = false
+// Evento para el botón porcentaje (%)
 numeroButtons.forEach(button => {
     button.addEventListener('click', () => {
         if (operacionShow == true) {
@@ -238,7 +235,6 @@ igualButton.addEventListener('click', _button => {
     const previo = calculator.valorPrevio
     const actual = calculator.valorActual
     const operacion = calculator.operacion
-
     calculator.calcular()
     calculator.actualizarPantalla()
     operacionShow = true
