@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movies</title>
+    <link rel="stylesheet" href="styles/output.css" />
+  </head>
+  <body class="bg-gradient-to-tl from-stone-400 via-white to-gray-450">
+    <!-- Contenedor -->
+    <!-- nav -->
+    <section
+      id="heroSectionServices"
+      class="flex flex-col bg-center bg-cover bg-blend-overlay bg-fixed bg-black/30"
+    >
+      <div
+        class="bg-gray-900 text-white font-bold justify-between items-center flex flex-row w-auto h-6 p-6"
+      >
+        <input
+          id="search"
+          class="border-2 border-black rounded-xl text-center"
+          type="text"
+          placeholder="Ingresa la pelicula aqui"
+        />
+      </div>
+    </section>
+
+    <div
+      id="contenedorPelicula"
+      class="grid grid-cols-1 md:grid-cols-4 place-items-center h-screen w-screen gap-6 m-6"
+    >
+      <!-- Info pelicula -->
+      <div class="grid grid-cols-1 h-125 w-100">
+        <div class="relative w-full h-full rounded-2xl overflow-hidden">
+          <img
+            src="/assets/posterTest.jpg"
+            alt="poster"
+            class="absolute inset-0 w-full h-full object-cover mask-b-from-20% mask-b-to-80%"
+          />
+          <div
+            class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent"
+          ></div>
+
+          <!-- Texto de pelicula -->
+          <div class="absolute bottom-0 left-0 w-full p-6 text-white">
+            <p class="font-bold text-xl">The Batman</p>
+            <p class="text-sm">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Accusantium totam voluptate perferendis
+            </p>
+            <p
+              class="mt-2 px-2 rounded-full text-black font-light bg-white w-fit text-sm"
+            >
+              2022
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="src/controller.js"></script>
+  </body>
+</html>
