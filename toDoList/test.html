@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+  <style>
+    .container { margin: 20px; }
+    .note {
+      width: 200px;
+      height: 100px;
+      background: lightblue;
+      margin: 10px;
+      display: inline-block;
+      transform-origin: center center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container"></div>
+  <button id="btn">Crear nota</button>
+
+  <script>
+    const container = document.querySelector(".container");
+    document.getElementById("btn").onclick = () => {
+      const note = document.createElement("div");
+      note.classList.add("note");
+      note.innerText = "Hola!";
+      container.appendChild(note);
+
+      anime({
+        targets: note,
+        scale: [0, 1],
+        duration: 600,
+        easing: "easeInOutCirc"
+      });
+    };
+  </script>
+</body>
+</html>
