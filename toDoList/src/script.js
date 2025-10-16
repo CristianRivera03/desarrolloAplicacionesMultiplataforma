@@ -1,21 +1,11 @@
 import { animate } from "animejs";
 import Masonry from "masonry-layout";
 
-
 const textForNote = document.getElementById("textForNote");
 const addBoton = document.getElementById("addNote");
 const container = document.querySelector(".container");
 
-
-
-//Iniciador de Mansory
-const masonry = new Masonry(container, {
-  itemSelector: ".note",
-  columnWidth: ".grid-sizer",
-  percentPosition: true,
-  gutter: 15
-});
-
+// 🎨 Colores disponibles
 const colors = {
   1: "#fdc86d",
   2: "#ff9c74",
@@ -24,99 +14,112 @@ const colors = {
   5: "#e4ed8d",
 };
 
-addBoton.addEventListener("click", () => {
-  console.log("click puah");
-  createNote();
+// 🧱 Iniciar Masonry
+const masonry = new Masonry(container, {
+  itemSelector: ".note",
+  columnWidth: ".grid-sizer",
+  percentPosition: true,
+  gutter: 15,
 });
 
-function eraseNote() {
-  console.log("Borrando esta shit");
+// 📦 Recuperar notas guardadas
+let notes = JSON.parse(localStorage.getItem("notes")) || [];
+
+// ➕ Agregar nueva nota
+addBoton.addEventListener("click", () => {
+  const text = textForNote.value.trim();
+  if (!text) {
+    alert("You must write something!");
+    return;
+  }
+
+  const color = colors[Math.floor(Math.random() * 5) + 1];
+  const date = new Date().toLocaleDateString("es-ES");
+
+  const newNote = {
+    id: Date.now(),
+    text,
+    color,
+    date,
+  };
+
+  notes.push(newNote);
+  saveNotes();
+  renderNotes();
+
+  textForNote.value = "";
+});
+
+// 💾 Guardar notas en localStorage
+function saveNotes() {
+  localStorage.setItem("notes", JSON.stringify(notes));
 }
 
-function createNote() {
-  if (textForNote.value === "") {
-    alert("You must write something!");
-  } else {
-    // color random
-    const color = Math.floor(Math.random() * 5) + 1;
+// 🗑️ Eliminar nota
+function deleteNote(id, noteElement) {
+  animate(noteElement, {
+    scale: [1, 0],
+    opacity: [1, 0],
+    duration: 400,
+    easing: "easeInOutCirc",
+    complete: () => {
+      notes = notes.filter((n) => n.id !== id);
+      saveNotes();
+      renderNotes();
+    },
+  });
+}
 
-    //seleccion de contenedor
-    const container = document.querySelector(".container");
+// 🧩 Renderizar notas
+function renderNotes() {
+  container.innerHTML = '<div class="grid-sizer"></div>';
 
-    //Creacion de nota
-    const note = document.createElement("div");
-    //Contenido de nota
+  notes.map((note) => {
+    const noteDiv = document.createElement("div");
+    noteDiv.className = "note";
+    noteDiv.style.backgroundColor = note.color;
+    noteDiv.style.width = "0px";
+    noteDiv.style.height = "0px";
+
     const noteData = document.createElement("p");
+    noteData.innerText = note.text;
 
-    //Fecha, bin  y contenedor
     const info = document.createElement("div");
-    const noteDate = document.createElement("p");
-    const bin = document.createElement("img");
-
-    //Fecha de nota
-    noteDate.innerText = new Date().toLocaleDateString("ES-ES").toString();
-    noteDate.className = "noteDate";
-    info.appendChild(noteDate);
-
-    //bin
-    bin.src = "/bin.svg";
-    info.appendChild(bin);
-
-    //Contenedor de bin y fecha
     info.className = "info";
 
-    //Color, texto y clase para la nota
-    note.style.backgroundColor = colors[color];
-    noteData.innerText = textForNote.value;
-    note.className = "note";
+    const noteDate = document.createElement("p");
+    noteDate.className = "noteDate";
+    noteDate.innerText = note.date;
 
-    //Anexando
-    container.appendChild(note);
-    note.appendChild(noteData);
-    note.appendChild(info);
+    const bin = document.createElement("img");
+    bin.src = "/bin.svg";
+    bin.addEventListener("click", () => deleteNote(note.id, noteDiv));
 
-    textForNote.value = "";
-    note.style.width = "0px";
-    note.style.height = "0px";
+    info.appendChild(noteDate);
+    info.appendChild(bin);
 
-    animate(note, {
+    noteDiv.appendChild(noteData);
+    noteDiv.appendChild(info);
+    container.appendChild(noteDiv);
+
+    // Animación de aparición
+    animate(noteDiv, {
       width: "260px",
       height: "200px",
-      ease: "inOutCirc",
+      easing: "easeInOutCirc",
+      duration: 400,
       complete: () => {
-        masonry.appended(note);
+        masonry.appended(noteDiv);
         masonry.layout();
-        saveTodos();
       },
     });
+  });
 
-
-    //borrar
-    bin.addEventListener("click", () => {
-      animate(note, {
-        scale: [1, 0],
-        opacity: [1, 0],
-        duration: 400,
-        easing: "ease-in-out",
-        complete: () => {
-          note.remove();
-          masonry.layout();
-          saveTodos();
-        },
-      });
-    });
-  }
+  masonry.reloadItems();
+  masonry.layout();
 }
 
-
-
-function saveTodos(){
-    localStorage.setItem("todos" , container.innerHTML)
-}
-
-function showTodos(){
-    container.innerHTML = localStorage.getItem("todos")
-
-}
-
-showTodos()
+// 🚀 Mostrar notas al iniciar
+document.addEventListener("DOMContentLoaded", () => {
+  renderNotes();
+});
